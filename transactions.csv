@@ -8,3 +8,7 @@ TransactionDate,TransactionType,AccountType,TransactionAmount
 02/20/2020 19:45:46,withdrawal,checking,250.00
 02/20/2020 19:46:06,deposit,savings,100.00
 02/20/2020 19:53:04,deposit,savings,59.24
+02/21/2020 11:18:07,deposit,checking,45.67
+02/21/2020 11:22:48,deposit,checking,56.78
+02/21/2020 11:26:40,withdrawal,savings,500.00
+02/21/2020 11:27:38,transfer,S->C,100.00

@@ -14,14 +14,25 @@ namespace SdgBank
 
       static string verifyAccount(string toCheck)
       {
-        var input = "";
         while (toCheck != "checking" && toCheck != "savings")
         {
           Console.Clear();
           Console.WriteLine("Please choose either (CHECKING) or (SAVINGS)");
-          input = Console.ReadLine().ToLower();
+          toCheck = Console.ReadLine().ToLower();
         }
-        return input;
+        return toCheck;
+      }
+
+      static decimal verifyAmount(string toCheck)
+      {
+
+        decimal depositNumber;
+        while (!decimal.TryParse(toCheck, out depositNumber))
+        {
+          Console.WriteLine("Please enter a valid money amount.  Example 13.45.");
+          toCheck = Console.ReadLine().ToLower();
+        }
+        return depositNumber;
       }
 
       // The app should save my transactions to file using a standard format.This saving should happen after every transaction
@@ -73,20 +84,12 @@ namespace SdgBank
             Console.Clear();
             Console.WriteLine("What account do you want to deposit into (CHECKING) or (SAVINGS)");
             var depositAccountType = Console.ReadLine().ToLower();
-
             depositAccountType = verifyAccount(depositAccountType);
 
             Console.WriteLine("How much will you be depositing?");
             var depositAmount = Console.ReadLine().ToLower();
+            decimal depositNumber = verifyAmount(depositAmount);
 
-            decimal depositNumber;
-            while (!decimal.TryParse(depositAmount, out depositNumber))
-            {
-              Console.WriteLine("Please enter a valid money amount.  Example 13.45.");
-              depositAmount = Console.ReadLine().ToLower();
-            }
-
-            // Call the function in BankManager
             Console.Clear();
             bankManager.MakeDeposit(depositAccountType, depositNumber);
             Console.WriteLine($"I have deposited {depositNumber} into your {depositAccountType} account.");
@@ -98,18 +101,12 @@ namespace SdgBank
             Console.Clear();
             Console.WriteLine("What account do you want to withdrawl from (CHECKING) or (SAVINGS)");
             var withdrawlAccountType = Console.ReadLine().ToLower();
-
-            depositAccountType = verifyAccount(withdrawlAccountType);
+            withdrawlAccountType = verifyAccount(withdrawlAccountType);
 
             Console.WriteLine("How much will you be withdrawling?");
             var withdrawlAmount = Console.ReadLine().ToLower();
+            decimal withdrawlNumber = verifyAmount(withdrawlAmount);
 
-            decimal withdrawlNumber;
-            while (!decimal.TryParse(withdrawlAmount, out withdrawlNumber))
-            {
-              Console.WriteLine("Please enter a valid money amount.  Example 13.45.");
-              withdrawlAmount = Console.ReadLine().ToLower();
-            }
             Console.Clear();
             bankManager.MakeWithdrawl(withdrawlAccountType, withdrawlNumber);
             Console.WriteLine($"You withdrew {withdrawlNumber} from your {withdrawlAccountType} account.");
@@ -120,18 +117,11 @@ namespace SdgBank
             Console.Clear();
             Console.WriteLine("What account do you want to transfer from (CHECKING) or (SAVINGS)");
             var transferAccountType = Console.ReadLine().ToLower();
-
-            depositAccountType = verifyAccount(transferAccountType);
+            transferAccountType = verifyAccount(transferAccountType);
 
             Console.WriteLine("How much will you be transfering?");
             var transferAmount = Console.ReadLine().ToLower();
-
-            decimal transferNumber;
-            while (!decimal.TryParse(transferAmount, out transferNumber))
-            {
-              Console.WriteLine("Please enter a valid money amount.  Example 13.45.");
-              transferAmount = Console.ReadLine().ToLower();
-            }
+            decimal transferNumber = verifyAmount(transferAmount);
 
             bankManager.TransferMoney(transferAccountType, transferNumber);
             // Call the function in BankManager
