@@ -12,10 +12,22 @@ namespace SdgBank
     static void Main(string[] args)
     {
 
+      static string verifyAccount(string toCheck)
+      {
+        var input = "";
+        while (toCheck != "checking" && toCheck != "savings")
+        {
+          Console.Clear();
+          Console.WriteLine("Please choose either (CHECKING) or (SAVINGS)");
+          input = Console.ReadLine().ToLower();
+        }
+        return input;
+      }
+
       // The app should save my transactions to file using a standard format.This saving should happen after every transaction
       // The app should load up past transaction from a file on start up.
       Console.Clear();
-      Console.WriteLine("$$$  Welcome to Virtual Bank.  $$$");
+      Console.WriteLine("$$$  Welcome to SDG Bank.  $$$");
       Console.WriteLine("");
 
       // open and read the Balance file
@@ -43,12 +55,27 @@ namespace SdgBank
         Console.WriteLine("  (QUIT) - Leave the virtual bank.");
         var input = Console.ReadLine().ToLower();
 
+        while (input != "deposit" && input != "withdrawl" && input != "transfer" && input != "balance" && input != "quit")
+        {
+          Console.Clear();
+          Console.WriteLine("Please choose one of the following.");
+          Console.WriteLine("  (DEPOSIT) - Deposit money.");
+          Console.WriteLine("  (WITHDRAWL) - Withdrawl money.");
+          Console.WriteLine("  (TRANSFER) - Transfer money.");
+          Console.WriteLine("  (BALANCE) - Check your balance.");
+          Console.WriteLine("  (QUIT) - Leave the virtual bank.");
+          input = Console.ReadLine().ToLower();
+        }
+
         switch (input)
         {
           case "deposit":
             Console.Clear();
             Console.WriteLine("What account do you want to deposit into (CHECKING) or (SAVINGS)");
             var depositAccountType = Console.ReadLine().ToLower();
+
+            depositAccountType = verifyAccount(depositAccountType);
+
             Console.WriteLine("How much will you be depositing?");
             var depositAmount = Console.ReadLine().ToLower();
 
@@ -71,6 +98,9 @@ namespace SdgBank
             Console.Clear();
             Console.WriteLine("What account do you want to withdrawl from (CHECKING) or (SAVINGS)");
             var withdrawlAccountType = Console.ReadLine().ToLower();
+
+            depositAccountType = verifyAccount(withdrawlAccountType);
+
             Console.WriteLine("How much will you be withdrawling?");
             var withdrawlAmount = Console.ReadLine().ToLower();
 
@@ -90,6 +120,9 @@ namespace SdgBank
             Console.Clear();
             Console.WriteLine("What account do you want to transfer from (CHECKING) or (SAVINGS)");
             var transferAccountType = Console.ReadLine().ToLower();
+
+            depositAccountType = verifyAccount(transferAccountType);
+
             Console.WriteLine("How much will you be transfering?");
             var transferAmount = Console.ReadLine().ToLower();
 
@@ -125,8 +158,6 @@ namespace SdgBank
             isRunning = false;
             break;
         }
-
-
       }
       Console.WriteLine("Thank you for banking with SDG Bank.");
     }

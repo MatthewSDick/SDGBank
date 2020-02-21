@@ -50,7 +50,7 @@ namespace SdgBank
       Console.WriteLine($"Your current account balances are...");
       for (int i = 0; i < accountsList.Count; i++)
       {
-        Console.WriteLine($" - {accountsList[i].AccountType} has to total of {accountsList[i].Balance}");
+        Console.WriteLine($" - {accountsList[i].AccountType} = {accountsList[i].Balance}");
       }
     }
     // As a user I should be able to deposit funds to my savings account
