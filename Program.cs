@@ -29,29 +29,21 @@ namespace SdgBank
         decimal depositNumber;
         while (!decimal.TryParse(toCheck, out depositNumber))
         {
-          Console.WriteLine("Please enter a valid money amount.  Example 13.45.");
+          Console.WriteLine("Please enter a valid money amount.  Example 13.45");
           toCheck = Console.ReadLine().ToLower();
         }
         return depositNumber;
       }
 
-      // The app should save my transactions to file using a standard format.This saving should happen after every transaction
-      // The app should load up past transaction from a file on start up.
       Console.Clear();
       Console.WriteLine("$$$  Welcome to SDG Bank.  $$$");
       Console.WriteLine("");
 
-      // open and read the Balance file
-      // Logic here to display balances
-      // As a user I should be able see the totals in my saving and checking account when the program first starts
       var bankManager = new BankManager();
       bankManager.loadAccounts();
       bankManager.loadTransactions();
 
       var accounts = new List<Account>();
-
-      //bankManager.SeeTotals();
-
 
       var isRunning = true;
       while (isRunning)
@@ -124,7 +116,6 @@ namespace SdgBank
             decimal transferNumber = verifyAmount(transferAmount);
 
             bankManager.TransferMoney(transferAccountType, transferNumber);
-            // Call the function in BankManager
 
             Console.Clear();
             if (transferAccountType == "checking")

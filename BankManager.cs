@@ -44,17 +44,16 @@ namespace SdgBank
       transactionsList = csvReader.GetRecords<Transaction>().ToList();
     }
 
-    // As a user I should be able see the totals in my saving and checking account when the program first starts
     public void SeeTotals()
     {
+      Console.Clear();
       Console.WriteLine($"Your current account balances are...");
       for (int i = 0; i < accountsList.Count; i++)
       {
         Console.WriteLine($" - {accountsList[i].AccountType} = {accountsList[i].Balance}");
       }
     }
-    // As a user I should be able to deposit funds to my savings account
-    // As a user I should be able to deposit funds to my checking account
+
     public void MakeDeposit(string accountType, decimal amount)
     {
       accountsList.Find(account => account.AccountType == accountType).Balance += amount;
@@ -63,8 +62,6 @@ namespace SdgBank
       SaveTransactions();
     }
 
-    // As a user I should be able to withdraw funds to my savings account
-    // As a user I should be able to withdraw funds to my checking account
     public void MakeWithdrawl(string accountType, decimal amount)
     {
       accountsList.Find(account => account.AccountType == accountType).Balance -= amount;
@@ -73,8 +70,6 @@ namespace SdgBank
       SaveTransactions();
     }
 
-    // As a user I should be able to transfer funds from my checking account to my savings account
-    // As a user I should be able to transfer funds from my savings account to my checking accounts
     public void TransferMoney(string fromAccount, decimal amount)
     {
       var transferType = "";
@@ -96,11 +91,5 @@ namespace SdgBank
       transactionsList.Add(new Transaction { TransactionType = "transfer", AccountType = transferType, TransactionAmount = amount });
       SaveTransactions();
     }
-
-
-    // The app should save my transactions to file using a standard format. This saving should happen after every transaction
-    // The app should load up past transaction from a file on start up.
-
-
   }
 }
