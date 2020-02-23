@@ -8,12 +8,12 @@ using CsvHelper;
 namespace SdgBank
 {
 
-
   public class BankManager
   {
 
     public List<Account> accountsList = new List<Account>();
     public List<Transaction> transactionsList = new List<Transaction>();
+    public List<User> userList = new List<User>();
     public void SaveAccounts()
     {
       var writer = new StreamWriter("accounts.csv");
@@ -44,52 +44,71 @@ namespace SdgBank
       transactionsList = csvReader.GetRecords<Transaction>().ToList();
     }
 
-    public void SeeTotals()
+    public void loadUsers()
+    {
+      var reader = new StreamReader("users.csv");
+      var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+      userList = csvReader.GetRecords<User>().ToList();
+    }
+
+    public void SeeTotals(string accountName)
     {
       Console.Clear();
       Console.WriteLine($"Your current account balances are...");
+      accountsList = accountsList.Where(x => x.UserName.ToLower() == accountName).ToList();
       for (int i = 0; i < accountsList.Count; i++)
       {
         Console.WriteLine($" - {accountsList[i].AccountType} = {accountsList[i].Balance}");
       }
+      loadAccounts();
     }
 
-    public void MakeDeposit(string accountType, decimal amount)
+    public void MakeDeposit(string accountType, decimal amount, string user)
     {
-      accountsList.Find(account => account.AccountType == accountType).Balance += amount;
+      accountsList.First(account => account.AccountType == accountType && account.UserName.ToLower() == user).Balance += amount;
       SaveAccounts();
-      transactionsList.Add(new Transaction { TransactionType = "deposit", AccountType = accountType, TransactionAmount = amount });
+      transactionsList.Add(new Transaction { UserName = user, TransactionType = "deposit", AccountType = accountType, TransactionAmount = amount });
       SaveTransactions();
     }
 
-    public void MakeWithdrawl(string accountType, decimal amount)
+    public void MakeWithdrawl(string accountType, decimal amount, string user)
     {
-      accountsList.Find(account => account.AccountType == accountType).Balance -= amount;
+      accountsList.First(account => account.AccountType == accountType && account.UserName.ToLower() == user).Balance -= amount;
       SaveAccounts();
-      transactionsList.Add(new Transaction { TransactionType = "withdrawal", AccountType = accountType, TransactionAmount = amount });
+      transactionsList.Add(new Transaction { UserName = user, TransactionType = "deposit", AccountType = accountType, TransactionAmount = amount });
       SaveTransactions();
     }
 
-    public void TransferMoney(string fromAccount, decimal amount)
+    public void TransferMoney(string fromAccount, decimal amount, string user)
     {
       var transferType = "";
       if (fromAccount == "checking")
       {
         var toAccount = "savings";
-        accountsList.Find(account => account.AccountType == fromAccount).Balance -= amount;
-        accountsList.Find(account => account.AccountType == toAccount).Balance += amount;
+        accountsList.Find(account => account.AccountType == fromAccount && account.UserName.ToLower() == user).Balance -= amount;
+        accountsList.Find(account => account.AccountType == toAccount && account.UserName.ToLower() == user).Balance += amount;
         transferType = "C->S";
       }
       else
       {
         var toAccount = "checking";
-        accountsList.Find(account => account.AccountType == fromAccount).Balance -= amount;
-        accountsList.Find(account => account.AccountType == toAccount).Balance += amount;
+        accountsList.Find(account => account.AccountType == fromAccount && account.UserName.ToLower() == user).Balance -= amount;
+        accountsList.Find(account => account.AccountType == toAccount && account.UserName.ToLower() == user).Balance += amount;
         transferType = "S->C";
       }
       SaveAccounts();
-      transactionsList.Add(new Transaction { TransactionType = "transfer", AccountType = transferType, TransactionAmount = amount });
+      transactionsList.Add(new Transaction { UserName = user, TransactionType = "transfer", AccountType = transferType, TransactionAmount = amount });
       SaveTransactions();
+    }
+
+
+    public List<User> SeeAccounts()
+    {
+      for (int i = 0; i < userList.Count; i++)
+      {
+        //Console.WriteLine($"{userList[i].UserName} \tAccount:{userList[i].AccountNumber}");
+      }
+      return userList;
     }
   }
 }

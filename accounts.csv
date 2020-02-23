@@ -1,3 +1,7 @@
-AccountType,Balance
-checking,711.68
-savings,568.23
+AccountType,Balance,UserName
+checking,1110.00,Bill
+savings,2120.00,Bill
+checking,2810.00,Frank
+savings,1020.00,Frank
+checking,1710.00,Tom
+savings,1020.00,Tom

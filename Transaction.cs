@@ -11,6 +11,7 @@ namespace SdgBank
     public string AccountType { get; set; }
 
     public decimal TransactionAmount { get; set; }
+    public string UserName { get; set; }
 
   }
 

@@ -34,6 +34,7 @@ namespace SdgBank
         }
         return depositNumber;
       }
+      var validUsers = new List<User>();
 
       Console.Clear();
       Console.WriteLine("$$$  Welcome to SDG Bank.  $$$");
@@ -42,13 +43,32 @@ namespace SdgBank
       var bankManager = new BankManager();
       bankManager.loadAccounts();
       bankManager.loadTransactions();
+      bankManager.loadUsers();
 
-      var accounts = new List<Account>();
+      //var accounts = new List<Account>();
 
       var isRunning = true;
       while (isRunning)
       {
-        bankManager.SeeTotals();
+        // Display a list of users
+        Console.WriteLine("Please choose an user.");
+        // Call display accounts
+        validUsers = bankManager.SeeAccounts();
+        for (int i = 0; i < validUsers.Count; i++)
+        {
+          Console.WriteLine($"({validUsers[i].UserName}) Account:{validUsers[i].AccountNumber}");
+        }
+
+        var has = false;
+        var selectedUser = "";
+        while (has == false)
+        {
+          Console.WriteLine("Please select an account name.");
+          selectedUser = Console.ReadLine().ToLower();
+          has = validUsers.Any(cus => cus.UserName.ToLower() == selectedUser);
+        }
+
+        bankManager.SeeTotals(selectedUser);
         Console.WriteLine("");
         Console.WriteLine("What Would you like to do today?");
         Console.WriteLine("  (DEPOSIT) - Deposit money.");
@@ -83,7 +103,7 @@ namespace SdgBank
             decimal depositNumber = verifyAmount(depositAmount);
 
             Console.Clear();
-            bankManager.MakeDeposit(depositAccountType, depositNumber);
+            bankManager.MakeDeposit(depositAccountType, depositNumber, selectedUser);
             Console.WriteLine($"I have deposited {depositNumber} into your {depositAccountType} account.");
 
             break;
@@ -100,7 +120,7 @@ namespace SdgBank
             decimal withdrawlNumber = verifyAmount(withdrawlAmount);
 
             Console.Clear();
-            bankManager.MakeWithdrawl(withdrawlAccountType, withdrawlNumber);
+            bankManager.MakeWithdrawl(withdrawlAccountType, withdrawlNumber, selectedUser);
             Console.WriteLine($"You withdrew {withdrawlNumber} from your {withdrawlAccountType} account.");
 
             break;
@@ -115,7 +135,7 @@ namespace SdgBank
             var transferAmount = Console.ReadLine().ToLower();
             decimal transferNumber = verifyAmount(transferAmount);
 
-            bankManager.TransferMoney(transferAccountType, transferNumber);
+            bankManager.TransferMoney(transferAccountType, transferNumber, selectedUser);
 
             Console.Clear();
             if (transferAccountType == "checking")
@@ -131,7 +151,7 @@ namespace SdgBank
 
           case "balance":
             Console.Clear();
-            bankManager.SeeTotals();
+            //bankManager.SeeTotals();
 
             break;
 
