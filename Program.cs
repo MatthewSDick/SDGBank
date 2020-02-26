@@ -34,41 +34,49 @@ namespace SdgBank
         }
         return depositNumber;
       }
-      var validUsers = new List<User>();
+
+      var bankContext = new BankContext();
+      var userName = "";
+
+      //var userName = "";
 
       Console.Clear();
       Console.WriteLine("$$$  Welcome to SDG Bank.  $$$");
       Console.WriteLine("");
 
-      var bankManager = new BankManager();
-      bankManager.loadAccounts();
-      bankManager.loadTransactions();
-      bankManager.loadUsers();
+      //Can't get this to work
 
-      //var accounts = new List<Account>();
+      bankContext.SeeAccounts();
+
+      Console.WriteLine("Please select a user account.");
+      Console.WriteLine("");
+      userName = Console.ReadLine().ToLower();
+      var validUser = false;
+      validUser = bankContext.ValidateUser(userName);
+      while (validUser == false)
+      {
+        Console.WriteLine("That is not a valid user.  Please try again.");
+        userName = Console.ReadLine().ToLower();
+        validUser = bankContext.ValidateUser(userName);
+      }
+
+      Console.WriteLine("Please enter your password.");
+      var userPassword = Console.ReadLine().ToLower();
+      var validPassword = false;
+      validUser = bankContext.ValidatePassword(userPassword);
+      while (validUser == false)
+      {
+        Console.WriteLine("That is not a valid password.  Please try again.");
+        Console.WriteLine("For this project all passwords are 'password'.");
+        userPassword = Console.ReadLine().ToLower();
+        validUser = bankContext.ValidatePassword(userPassword);
+      }
 
       var isRunning = true;
       while (isRunning)
       {
-        // Display a list of users
-        Console.WriteLine("Please choose an user.");
-        // Call display accounts
-        validUsers = bankManager.SeeAccounts();
-        for (int i = 0; i < validUsers.Count; i++)
-        {
-          Console.WriteLine($"({validUsers[i].UserName}) Account:{validUsers[i].AccountNumber}");
-        }
 
-        var has = false;
-        var selectedUser = "";
-        while (has == false)
-        {
-          Console.WriteLine("Please select an account name.");
-          selectedUser = Console.ReadLine().ToLower();
-          has = validUsers.Any(cus => cus.UserName.ToLower() == selectedUser);
-        }
-
-        bankManager.SeeTotals(selectedUser);
+        bankContext.SeeTotals(userName);
         Console.WriteLine("");
         Console.WriteLine("What Would you like to do today?");
         Console.WriteLine("  (DEPOSIT) - Deposit money.");
@@ -103,7 +111,7 @@ namespace SdgBank
             decimal depositNumber = verifyAmount(depositAmount);
 
             Console.Clear();
-            bankManager.MakeDeposit(depositAccountType, depositNumber, selectedUser);
+            bankContext.MakeDeposit(depositAccountType, depositNumber, userName);
             Console.WriteLine($"I have deposited {depositNumber} into your {depositAccountType} account.");
 
             break;
@@ -120,7 +128,7 @@ namespace SdgBank
             decimal withdrawlNumber = verifyAmount(withdrawlAmount);
 
             Console.Clear();
-            bankManager.MakeWithdrawl(withdrawlAccountType, withdrawlNumber, selectedUser);
+            bankContext.MakeWithdrawl(withdrawlAccountType, withdrawlNumber, userName);
             Console.WriteLine($"You withdrew {withdrawlNumber} from your {withdrawlAccountType} account.");
 
             break;
@@ -135,7 +143,7 @@ namespace SdgBank
             var transferAmount = Console.ReadLine().ToLower();
             decimal transferNumber = verifyAmount(transferAmount);
 
-            bankManager.TransferMoney(transferAccountType, transferNumber, selectedUser);
+            bankContext.TransferMoney(transferAccountType, transferNumber, userName);
 
             Console.Clear();
             if (transferAccountType == "checking")
@@ -151,8 +159,7 @@ namespace SdgBank
 
           case "balance":
             Console.Clear();
-            //bankManager.SeeTotals();
-
+            bankContext.SeeTotals(userName);
             break;
 
           case "quit":
